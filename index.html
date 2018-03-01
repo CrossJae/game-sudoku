@@ -16,8 +16,11 @@
       // 排行，过关时间排行
       // 3条命，if(命<3)，过关会送一条，不能大于3
 
-      const layer = 9; //难度，多少层
-      const initialValue = 70;// 初始数的个数
+      const layer = 3; //难度，多少层
+      const initialValue = 3;// 初始数的个数
+      let posArr = []; // 记录哪些位置已经填上数了
+      // 9*9 初始化70个大概就会超过最大值
+
       // 初始化数独数组
       let arr = new Array(layer); // 数独数组
       for(let i=0; i<layer; i++){
@@ -43,23 +46,37 @@
         }
         return otherHas;
       }
+      // 获取坐标
+      function getPos(xPos,yPos){
+        let pos = {};
+        return pos = {
+          x: xPos || getRandom(layer),
+          y: yPos || getRandom(layer)
+        }
+      }
 
       // 填数
-      function getPos(xPos,yPos,value){
-        const x = xPos || getRandom(layer);
-        const y = yPos || getRandom(layer);
+      function setValue(xPos,yPos,value){
+        // 获取不重复的坐标
+        let pos,posString;
+        do{
+          pos = getPos(xPos,yPos);
+          posString = pos.x.toString() + pos.y.toString();
+          console.log(posString)
+        }while(posArr.indexOf(posString) >= 0)
+
         const v = value || getRandom(layer)+1;
-        const old = arr[x][y]; // 获取当前位置内容
-        const otherHas = testOtherHas(x,y,v); // 判断其他位置是否有该值
-        if(old || otherHas){
-          getPos(); // 某些条件会重新执行自身
+        const otherHas = testOtherHas(pos.x, pos.y, v); // 判断其他位置是否有该值
+        if(otherHas){
+          setValue(); // 某些条件会重新执行自身
         }else{
-          arr[x][y] = v;
+          posArr.push(posString);
+          arr[pos.x][pos.y] = v;
         }
       }
 
       for(let i=0; i<initialValue; i++){
-        getPos();
+        setValue();
       }
 
 
@@ -72,10 +89,11 @@
 
       console.log('////答案////')
       // getPos();
-      // for(let i=0; i<40; i++){
+      // for(let i=0; i<6; i++){
       //   getPos();
+      //   // console.log(1)
       // }
-
+      //
       // for(let i=0;i<layer;i++){
       //   console.log(arr[i])
       // }
