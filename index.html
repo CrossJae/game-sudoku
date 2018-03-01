@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>shudu</title>
+  </head>
+  <body>
+    <!-- <table>
+      <tbody>
+        <tr></tr>
+      </tbody>
+    </table> -->
+    <script type="text/javascript">
+      // 小动物数独？
+      // 6*6的格子
+      // 排行，过关时间排行
+      // 3条命，if(命<3)，过关会送一条，不能大于3
+
+      const layer = 9; //难度，多少层
+      const initialValue = 70;// 初始数的个数
+      // 初始化数独数组
+      let arr = new Array(layer); // 数独数组
+      for(let i=0; i<layer; i++){
+        arr[i] = new Array(layer)
+      }
+
+      // 随机出现数独数组
+      function getRandom(n){
+        return Math.floor( Math.random(1) * n );
+      }
+
+      // 判断其他位置是否有该值，有返回false
+      function testOtherHas(x, y, v){
+        let otherHas = 0;
+        if(arr[x].indexOf(v)<0){
+          for(let i=0; i<layer; i++){
+            if(arr[i][y] == v){
+              otherHas = 1;
+            }
+          }
+        }else{
+          otherHas = 1;
+        }
+        return otherHas;
+      }
+
+      // 填数
+      function getPos(xPos,yPos,value){
+        const x = xPos || getRandom(layer);
+        const y = yPos || getRandom(layer);
+        const v = value || getRandom(layer)+1;
+        const old = arr[x][y]; // 获取当前位置内容
+        const otherHas = testOtherHas(x,y,v); // 判断其他位置是否有该值
+        if(old || otherHas){
+          getPos(); // 某些条件会重新执行自身
+        }else{
+          arr[x][y] = v;
+        }
+      }
+
+      for(let i=0; i<initialValue; i++){
+        getPos();
+      }
+
+
+      // console调试
+      // arr[2][2] = 3;
+      // console.log( testOtherHas(1,2,3))
+      for(let i=0;i<layer;i++){
+        console.log(arr[i])
+      }
+
+      console.log('////答案////')
+      // getPos();
+      // for(let i=0; i<40; i++){
+      //   getPos();
+      // }
+
+      // for(let i=0;i<layer;i++){
+      //   console.log(arr[i])
+      // }
+
+    </script>
+  </body>
+</html>
